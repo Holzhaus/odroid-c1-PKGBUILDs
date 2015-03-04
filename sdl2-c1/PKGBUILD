@@ -1,0 +1,58 @@
+# Maintainer: Jan Holthuis <holthuis.jan@googlemail.com>
+
+buildarch=4
+
+_prefix=/usr
+
+pkgname=sdl2-c1
+pkgver=2.0.2
+pkgrel=1
+pkgdesc="SDL2 library with OpenGL ES and FB support for ODROID-C1"
+arch=('armv7h')
+url="http://www.libsdl.org"
+license=('MIT')
+depends=('glibc' 'libgl' 'odroid-c1-libgl-fb')
+makedepends=('alsa-lib' 'mesa' 'libxkbcommon')
+optdepends=('alsa-lib: ALSA audio driver')
+conflicts=('sdl2')
+provides=('sdl2')
+replaces=('sdl2')
+_commit=830017e0fa37516f354f2afb67a46528644f13de
+source=("https://github.com/mihailescu2m/libsdl2-2.0.2-dfsg1/archive/${_commit}.tar.gz"
+        "git+https://github.com/mdrjr/c1_mali_libs.git")
+sha256sums=('SKIP'
+            'SKIP')
+
+prepare() {
+  mkdir build
+}
+
+build() {
+  cd build
+
+    MALI_INCLUDE=$srcdir/c1_mali_libs/fbdev/mali_headers
+    CFLAGS=$(echo "$CFLAGS -I$MALI_INCLUDE -ffast-math" | sed -e 's/vfpv3-d16/neon-vfpv4/') && CXXFLAGS="$CFLAGS"
+    LDFLAGS+=" -L/usr/lib/mali-egl -L/usr/lib/aml_libs"
+
+  ../libsdl2-2.0.2-dfsg1-$_commit/configure --prefix=/usr \
+    --enable-sdl-dlopen \
+    --disable-arts --disable-esd --disable-nas \
+    --enable-alsa \
+    --disable-pulseaudio \
+    --disable-video-wayland \
+    --without-x --disable-video-x11 --disable-x11-shared \
+    --disable-video-x11-xcursor --disable-video-x11-xinerama \
+    --disable-video-x11-xinput --disable-video-x11-xrandr \
+    --disable-video-x11-scrnsaver --disable-video-x11-xshape \
+    --disable-video-x11-vm --disable-video-opengl \
+    --disable-video-directfb \
+    --enable-video-opengles --enable-video-mali \
+    --disable-rpath && make || return 1
+}
+
+package() {
+  cd build
+  install -Dm644 ../libsdl2-2.0.2-dfsg1-$_commit/COPYING.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  make DESTDIR="$pkgdir" install || return 1
+}
+	
