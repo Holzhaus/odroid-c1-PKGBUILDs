@@ -1,0 +1,36 @@
+# Maintainer:  prettyvanilla <prettyvanilla@posteo.at>
+# Contributor: almostalive   <almostalive2003 at gmail dot com>
+# Contributor: Jan Holthuis <holthuis.jan@googlemail.com>
+
+pkgname=libretro-vba-next-c1
+pkgver=478.846a3c7
+pkgrel=1
+pkgdesc="libretro implementation of VBA Next. (Game Boy Advance)"
+arch=('armv7h')
+url="https://github.com/libretro/vba-next"
+license=('GPL')
+makedepends=('git')
+conflicts=('libretro-vba-next-git')
+provides=('libretro-vba-next')
+
+_gitname=vba-next
+source=("git+https://github.com/libretro/${_gitname}.git"
+        "https://raw.github.com/libretro/libretro-super/master/dist/info/vba_next_libretro.info")
+md5sums=('SKIP'
+         'SKIP')
+
+pkgver() {
+  cd "${_gitname}"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "${_gitname}"
+  CFLAGS="-ffast-math -mfloat-abi=hard -mfpu=neon -mcpu=cortex-a5 -mtune=cortex-a5" && CXXFLAGS="$CFLAGS"
+  make -f Makefile.libretro platform=armv,neon,hardfloat TILED_RENDERING=1 HAVE_NEON=1
+}
+
+package() {
+  install -Dm644 "${_gitname}/vba_next_libretro.so" "${pkgdir}/usr/lib/libretro/libretro-vba-next.so"
+  install -Dm644 "vba_next_libretro.info" "${pkgdir}/usr/lib/libretro/libretro-vba-next.info"
+}

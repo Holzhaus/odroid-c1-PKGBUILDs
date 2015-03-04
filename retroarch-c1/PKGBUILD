@@ -1,0 +1,40 @@
+#Contributor <Themaister> <maister@archlinux.us>
+#Contributor <lifning> <definelightning@gmail.com>
+#Contributor Jan Holthuis <holthuis.jan@googlemail.com>
+
+pkgname=retroarch-c1
+_pkgname=RetroArch
+pkgver=1.0.0.3
+_pkgtag=-beta
+pkgrel=1
+pkgdesc="Simple frontend for the libretro API (for ODROID-C1)."
+url="http://themaister.net/retroarch.html"
+arch=('armv7h')
+license=('GPL')
+optdepends=('libretro-super-git: A collection of many libretro implementations.')
+conflicts=('retroarch-git')
+provides=('retroarch')
+
+source=("https://github.com/libretro/${_pkgname}/archive/${pkgver}${_pkgtag}.tar.gz"
+        "git+https://github.com/mdrjr/c1_mali_libs.git")
+md5sums=('3d3ebf02c7b19bc8c02329ec827349f9'
+         'SKIP')
+
+backup=('etc/retroarch.cfg')
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}${_pkgtag}"
+
+    MALI_INCLUDE=$srcdir/c1_mali_libs/fbdev/mali_headers
+    CC="gcc"
+    CFLAGS="-I$MALI_INCLUDE -ffast-math -mfloat-abi=hard -mfpu=neon -mcpu=cortex-a5 -mtune=cortex-a5" && CXXFLAGS="$CFLAGS"
+    LDFLAGS+=" -L/usr/lib/mali-egl -L/usr/lib/aml_libs" ./configure --enable-mali_fbdev --enable-gles --enable-neon --enable-floathard --disable-x11 --prefix=/usr && make || return 1
+}
+
+package() {
+    mkdir -p "${pkgdir}/etc"
+    mkdir -p "${pkgdir}/usr/bin"
+    mkdir -p "${pkgdir}/usr/share/man/man1"
+    cd "${srcdir}/${_pkgname}-${pkgver}${_pkgtag}"
+    make install DESTDIR=${pkgdir} || return 1
+}
