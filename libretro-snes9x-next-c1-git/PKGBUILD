@@ -1,0 +1,36 @@
+# Maintainer:  prettyvanilla <prettyvanilla@posteo.at>
+# Contributor: almostalive   <almostalive2003 at gmail dot com>
+# Contributor: Holzhaus <holthuis.jan@googlemail.com>
+
+pkgname=libretro-snes9x-next-c1-git
+pkgver=719.d27e321
+pkgrel=1
+pkgdesc="libretro implementation of SNES9x Next. (Super Nintendo Entertainment System)"
+arch=('armv7h')
+url="https://github.com/libretro/snes9x-next"
+license=('custom')
+conclicts=('libretro-snes9x-next' 'libretro-snes9x-next-git')
+provides=('libretro-snes9x-next')
+makedepends=('git')
+_gitname=snes9x-next
+
+source=("git+https://github.com/libretro/${_gitname}.git"
+        "https://raw.github.com/libretro/libretro-super/master/dist/info/snes9x_next_libretro.info")
+md5sums=('SKIP'
+         'SKIP')
+
+pkgver() {
+  cd "${_gitname}"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "${_gitname}"
+  make -f Makefile.libretro platform="armv,neon,hardfloat"
+}
+
+package() {
+  install -Dm644 "${_gitname}/docs/snes9x-license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+  install -Dm644 "${_gitname}/snes9x_next_libretro.so" "${pkgdir}/usr/lib/libretro/libretro-snes9x-next.so"
+  install -Dm644 "snes9x_next_libretro.info" "${pkgdir}/usr/lib/libretro/libretro-snes9x-next.info"
+}
