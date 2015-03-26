@@ -4,7 +4,7 @@ buildarch=4
 
 _prefix=/usr
 
-pkgname=sdl2-c1
+pkgname=sdl2-c1-git
 pkgver=2.0.2
 pkgrel=1
 pkgdesc="SDL2 library with OpenGL ES and FB support for ODROID-C1"
@@ -14,7 +14,7 @@ license=('MIT')
 depends=('glibc' 'libgl' 'odroid-c1-libgl-fb')
 makedepends=('alsa-lib' 'mesa' 'libxkbcommon')
 optdepends=('alsa-lib: ALSA audio driver')
-conflicts=('sdl2')
+conflicts=('sdl2' 'sdl2-git')
 provides=('sdl2')
 replaces=('sdl2')
 _commit=830017e0fa37516f354f2afb67a46528644f13de

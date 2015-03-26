@@ -2,15 +2,15 @@
 # Contributor: almostalive   <almostalive2003 at gmail dot com>
 # Contributor: Jan Holthuis <holthuis.jan@googlemail.com>
 
-pkgname=libretro-vba-next-c1
+pkgname=libretro-vba-next-c1-git
 pkgver=478.846a3c7
 pkgrel=1
-pkgdesc="libretro implementation of VBA Next. (Game Boy Advance)"
+pkgdesc="libretro implementation of VBA Next (Game Boy Advance) for ODROID-C1"
 arch=('armv7h')
 url="https://github.com/libretro/vba-next"
 license=('GPL')
 makedepends=('git')
-conflicts=('libretro-vba-next-git')
+conflicts=('libretro-vba-next' libretro-vba-next-git')
 provides=('libretro-vba-next')
 
 _gitname=vba-next

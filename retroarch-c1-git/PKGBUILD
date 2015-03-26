@@ -2,7 +2,7 @@
 #Contributor <lifning> <definelightning@gmail.com>
 #Contributor Jan Holthuis <holthuis.jan@googlemail.com>
 
-pkgname=retroarch-c1
+pkgname=retroarch-c1-git
 _pkgname=RetroArch
 pkgver=1.0.0.3
 _pkgtag=-beta
@@ -11,8 +11,10 @@ pkgdesc="Simple frontend for the libretro API (for ODROID-C1)."
 url="http://themaister.net/retroarch.html"
 arch=('armv7h')
 license=('GPL')
+depends=('odroid-c1-libgl-fb')
 optdepends=('libretro-super-git: A collection of many libretro implementations.')
-conflicts=('retroarch-git')
+
+conflicts=('retroarch' 'retroarch-git')
 provides=('retroarch')
 
 source=("https://github.com/libretro/${_pkgname}/archive/${pkgver}${_pkgtag}.tar.gz"
@@ -36,5 +38,6 @@ package() {
     mkdir -p "${pkgdir}/usr/bin"
     mkdir -p "${pkgdir}/usr/share/man/man1"
     cd "${srcdir}/${_pkgname}-${pkgver}${_pkgtag}"
-    make install DESTDIR=${pkgdir} || return 1
+    make install DESTDIR=${pkgdir}
+    install -m755 -t "${pkgdir}/usr/bin" "tools/retroarch-joyconfig"
 }
