@@ -1,0 +1,46 @@
+# Maintainer: carstene1ns <arch carsten-teibes de> - http://git.io/ctPKG
+
+pkgname=reicast-c1-git
+pkgver=r1109.0459f4a
+pkgrel=1
+pkgdesc="A multiplatform Sega Dreamcast emulator (development version)(for ODROID C1)"
+arch=('armv7h')
+url="http://reicast.com/"
+license=('GPL2' 'BSD' 'MIT')
+conflicts=('reicast')
+provides=('reicast')
+makedepends=('git')
+depends=('libgl' 'alsa-lib')
+source=(reicast::"git+https://github.com/meveric/reicast-emulator.git#branch=odroid"
+        "git+https://github.com/mdrjr/c1_mali_libs.git"
+        "Makefile"
+        "remove_arm_dyna_default_args.patch")
+md5sums=('SKIP'
+         'SKIP'
+         'b8c678ece115833ee90abff6ec8fb294'
+         'af4be18de29dbf7075f9729635b6372c')
+
+pkgver() {
+  cd "$srcdir/reicast"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare () {
+  cd "$srcdir/reicast"
+  rm "shell/odroid/Makefile"
+  cp "$srcdir/Makefile" shell/odroid/Makefile
+  patch "core/rec-ARM/arm_dyna.cpp" < "$srcdir/remove_arm_dyna_default_args.patch"
+}
+build () {
+  cd "$srcdir/reicast"
+  MALI_INCLUDE="$srcdir/c1_mali_libs/fbdev/mali_headers"
+  CFLAGS="-I$MALI_INCLUDE" && CXXFLAGS="$CFLAGS"
+  LDFLAGS+=" -L/usr/lib/mali-egl -L/usr/lib/aml_libs" make -C "shell/odroid"
+}
+
+package () {
+  cd "$srcdir/reicast"
+  install -Dm755 shell/odroid/reicast.elf "$pkgdir"/usr/bin/reicast
+  # license
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

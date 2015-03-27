@@ -1,0 +1,17 @@
+--- arm_dyna.cpp	2015-03-27 13:49:41.806950224 +0100
++++ arm_dyna.cpp.2	2015-03-27 14:06:51.735297603 +0100
+@@ -183,10 +183,10 @@
+ #define rfp_r9 r9
+ 
+ 
+-typedef void FPBinOP        (eFSReg Sd, eFSReg Sn, eFSReg Sm, ConditionCode CC=CC_AL);
+-typedef void FPUnOP         (eFSReg Sd, eFSReg Sm,            ConditionCode CC=CC_AL);
+-typedef void BinaryOP       (eReg Rd, eReg Rn, eReg Rm,       ConditionCode CC=AL);
+-typedef void BinaryOPImm    (eReg Rd, eReg Rn, s32 sImm8,     ConditionCode CC=AL);
++typedef void FPBinOP        (eFSReg Sd, eFSReg Sn, eFSReg Sm, ConditionCode CC);
++typedef void FPUnOP         (eFSReg Sd, eFSReg Sm,            ConditionCode CC);
++typedef void BinaryOP       (eReg Rd, eReg Rn, eReg Rm,       ConditionCode CC);
++typedef void BinaryOPImm    (eReg Rd, eReg Rn, s32 sImm8,     ConditionCode CC);
+ typedef void UnaryOP        (eReg Rd, eReg Rs);
+ 
+ 
