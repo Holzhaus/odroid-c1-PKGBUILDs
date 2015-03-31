@@ -1,8 +1,8 @@
 LOCAL_PATH := $(call my-dir)
 FOR_LINUX :=1
 WEBUI :=1
-#USE_OSS := 1
-USE_ALSA := 1
+USE_OSS := 1
+#USE_ALSA := 1
 USE_VMEM_FILE :=1
 #NO_REND := 1
 NO_X11 := 1

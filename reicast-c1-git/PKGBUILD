@@ -18,7 +18,7 @@ source=(reicast::"git+https://github.com/meveric/reicast-emulator.git#branch=odr
         "backport_alsa_support_from_linux_x64_branch.patch")
 md5sums=('SKIP'
          'SKIP'
-         'ce607bac0b7b52c0c64bb80625ff551b'
+         '1485920e27f8b753f5a6ef0f35b57477'
          'af4be18de29dbf7075f9729635b6372c'
          '132c1c63b26ae10687230fd4ceab6f47')
 
