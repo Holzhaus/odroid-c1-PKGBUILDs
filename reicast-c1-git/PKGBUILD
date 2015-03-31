@@ -14,11 +14,13 @@ depends=('libgl' 'alsa-lib')
 source=(reicast::"git+https://github.com/meveric/reicast-emulator.git#branch=odroid"
         "git+https://github.com/mdrjr/c1_mali_libs.git"
         "Makefile"
-        "remove_arm_dyna_default_args.patch")
+        "remove_arm_dyna_default_args.patch"
+        "backport_alsa_support_from_linux_x64_branch.patch")
 md5sums=('SKIP'
          'SKIP'
-         'b8c678ece115833ee90abff6ec8fb294'
-         'af4be18de29dbf7075f9729635b6372c')
+         'ce607bac0b7b52c0c64bb80625ff551b'
+         'af4be18de29dbf7075f9729635b6372c'
+         '132c1c63b26ae10687230fd4ceab6f47')
 
 pkgver() {
   cd "$srcdir/reicast"
@@ -30,6 +32,7 @@ prepare () {
   rm "shell/odroid/Makefile"
   cp "$srcdir/Makefile" shell/odroid/Makefile
   patch "core/rec-ARM/arm_dyna.cpp" < "$srcdir/remove_arm_dyna_default_args.patch"
+  patch -p1 < "$srcdir/backport_alsa_support_from_linux_x64_branch.patch"
 }
 build () {
   cd "$srcdir/reicast"
