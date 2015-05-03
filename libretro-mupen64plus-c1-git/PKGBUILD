@@ -1,0 +1,38 @@
+# Maintainer: Thomas Schneider <maxmusterm@gmail.com>
+# Contributor: Jan Holthuis <holthuis dot jan at googlemail dot com>
+
+pkgname=libretro-mupen64plus-c1-git
+_gitname=mupen64plus-libretro
+pkgver=2636.6e0953f
+pkgrel=1
+pkgdesc="libretro implementation of mupen64plus with dynarec (for ODROID-C1)"
+arch=('armv7h')
+url="https://github.com/libretro/mupen64plus-libretro"
+license=('custom' 'GPL' 'LGPL')
+makedepends=('git')
+source=("${_gitname}::git://github.com/libretro/${_gitname}.git"
+	"https://raw.github.com/libretro/libretro-super/master/dist/info/mupen64plus_libretro.info"
+        "git+https://github.com/mdrjr/c1_mali_libs.git")
+
+md5sums=('SKIP'
+	 'SKIP'
+         'SKIP')
+
+pkgver() {
+  cd "${_gitname}"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "${_gitname}"
+  MALI_INCLUDE=$srcdir/c1_mali_libs/fbdev/mali_headers
+  CFLAGS="$CFLAGS -I$MALI_INCLUDE"
+  CPPFLAGS="$CPPFLAGS -DNOSSE -I$MALI_INCLUDE"
+  LDFLAGS+=" -L/usr/lib/mali-egl -L/usr/lib/aml_libs"
+  make platform=odroid-c1
+}
+
+package() {
+  install -Dm644 "${srcdir}/mupen64plus_libretro.info" "${pkgdir}/usr/lib/libretro/libretro-mupen64plus.info"
+  install -Dm644 "${_gitname}/mupen64plus_libretro.so" "${pkgdir}/usr/lib/libretro/libretro-mupen64plus.so"
+}
