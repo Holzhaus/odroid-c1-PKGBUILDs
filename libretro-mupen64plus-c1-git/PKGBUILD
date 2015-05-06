@@ -4,7 +4,7 @@
 pkgname=libretro-mupen64plus-c1-git
 _gitname=mupen64plus-libretro
 pkgver=2636.6e0953f
-pkgrel=1
+pkgrel=2
 pkgdesc="libretro implementation of mupen64plus with dynarec (for ODROID-C1)"
 arch=('armv7h')
 url="https://github.com/libretro/mupen64plus-libretro"
@@ -27,9 +27,9 @@ build() {
   cd "${_gitname}"
   MALI_INCLUDE=$srcdir/c1_mali_libs/fbdev/mali_headers
   CFLAGS="$CFLAGS -I$MALI_INCLUDE"
-  CPPFLAGS="$CPPFLAGS -DNOSSE -I$MALI_INCLUDE"
+  CXXFLAGS="$CXXFLAGS -DNOSSE -I$MALI_INCLUDE"
   LDFLAGS+=" -L/usr/lib/mali-egl -L/usr/lib/aml_libs"
-  make platform=odroid-c1
+  make platform=odroid
 }
 
 package() {
